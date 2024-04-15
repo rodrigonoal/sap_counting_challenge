@@ -1,6 +1,5 @@
 
-
-CLASS ycl_hello DEFINITION
+CLASS zcl_wordcounter DEFINITION
   PUBLIC
   FINAL
   CREATE PUBLIC.
@@ -9,7 +8,7 @@ CLASS ycl_hello DEFINITION
   PRIVATE SECTION.
 ENDCLASS.
 
-CLASS ycl_hello IMPLEMENTATION.
+CLASS zcl_wordcounter IMPLEMENTATION.
   METHOD if_oo_adt_classrun~main.
     DATA: my_string   TYPE string VALUE 'ABAP4BTP is amazing ',
           lv_length   TYPE i,
@@ -17,9 +16,9 @@ CLASS ycl_hello IMPLEMENTATION.
           lv_char     TYPE c,
           lv_word     TYPE string,
           word_count  TYPE i,
+          unique_count TYPE string,
           words       TYPE TABLE OF string,
-          unique_chars TYPE TABLE OF c,
-          unique_count TYPE i.
+          unique_chars TYPE TABLE OF c.
 
     lv_length = strlen( my_string ).
     word_count = 0. " Initialize word count
@@ -31,7 +30,8 @@ CLASS ycl_hello IMPLEMENTATION.
         SORT unique_chars.
         DELETE ADJACENT DUPLICATES FROM unique_chars.
         unique_count = lines( unique_chars ).
-        APPEND unique_count TO words.
+        CONCATENATE 'Unique chars in' lv_word ':' unique_count INTO lv_word SEPARATED BY space.
+        APPEND lv_word TO words.
         CLEAR unique_chars.
         CLEAR lv_word. " Clear the word variable for the next word
         word_count = word_count + 1. " Increment word count
@@ -46,11 +46,12 @@ CLASS ycl_hello IMPLEMENTATION.
     SORT unique_chars.
     DELETE ADJACENT DUPLICATES FROM unique_chars.
     unique_count = lines( unique_chars ).
-    APPEND unique_count TO words.
+    CONCATENATE 'Unique chars in' lv_word ':' unique_count INTO lv_word SEPARATED BY space.
+    APPEND lv_word TO words.
 
     " Print each word and its unique character count
-    LOOP AT words INTO unique_count.
-      out->write( unique_count ).
+    LOOP AT words INTO lv_word.
+      out->write( lv_word ).
       out->write( | | ).
     ENDLOOP.
 
@@ -58,3 +59,4 @@ CLASS ycl_hello IMPLEMENTATION.
     out->write( |Word count: { word_count }| ).
   ENDMETHOD.
 ENDCLASS.
+
